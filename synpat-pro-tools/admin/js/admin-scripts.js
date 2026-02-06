@@ -120,23 +120,25 @@
 			const $search = $('.synpat-prior-art-search');
 			if (!$search.length) return;
 
-			// Auto-complete for patent numbers
-			$('.synpat-patent-search-input').autocomplete({
-				source: (request, response) => {
-					$.ajax({
-						url: synpatPro.ajaxUrl,
-						data: {
-							action: 'synpat_pro_search_patents',
-							nonce: synpatPro.nonce,
-							term: request.term
-						},
-						success: (data) => {
-							response(data.data);
-						}
-					});
-				},
-				minLength: 2
-			});
+			// Auto-complete for patent numbers if jQuery UI is available
+			if ($.fn.autocomplete) {
+				$('.synpat-patent-search-input').autocomplete({
+					source: (request, response) => {
+						$.ajax({
+							url: synpatPro.ajaxUrl,
+							data: {
+								action: 'synpat_pro_search_patents',
+								nonce: synpatPro.nonce,
+								term: request.term
+							},
+							success: (data) => {
+								response(data.data);
+							}
+						});
+					},
+					minLength: 2
+				});
+			}
 		},
 
 		/**

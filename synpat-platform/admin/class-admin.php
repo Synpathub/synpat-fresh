@@ -141,25 +141,26 @@ class SynPat_Admin {
 		// Get portfolios count
 		$portfolios_table = $this->db->table( 'portfolios' );
 		if ( $portfolios_table ) {
-			$stats['portfolios_count'] = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$portfolios_table}" );
+			// Table names are already sanitized by the database class
+			$stats['portfolios_count'] = (int) $wpdb->get_var( "SELECT COUNT(*) FROM `{$portfolios_table}`" );
 		}
 
 		// Get patents count
 		$patents_table = $this->db->table( 'patents' );
 		if ( $patents_table ) {
-			$stats['patents_count'] = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$patents_table}" );
+			$stats['patents_count'] = (int) $wpdb->get_var( "SELECT COUNT(*) FROM `{$patents_table}`" );
 		}
 
 		// Get licensees count
 		$licensees_table = $this->db->table( 'licensees' );
 		if ( $licensees_table ) {
-			$stats['licensees_count'] = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$licensees_table}" );
+			$stats['licensees_count'] = (int) $wpdb->get_var( "SELECT COUNT(*) FROM `{$licensees_table}`" );
 		}
 
 		// Get claim charts count
 		$claim_charts_table = $this->db->table( 'claim_charts' );
 		if ( $claim_charts_table ) {
-			$stats['claim_charts_count'] = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$claim_charts_table}" );
+			$stats['claim_charts_count'] = (int) $wpdb->get_var( "SELECT COUNT(*) FROM `{$claim_charts_table}`" );
 		}
 
 		return $stats;
@@ -175,7 +176,8 @@ class SynPat_Admin {
 		}
 
 		// Verify nonce for security
-		if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'synpat_admin_action' ) ) {
+		$nonce = isset( $_GET['_wpnonce'] ) ? wp_unslash( $_GET['_wpnonce'] ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'synpat_admin_action' ) ) {
 			return;
 		}
 
@@ -240,8 +242,11 @@ class SynPat_Admin {
 			return;
 		}
 
+		// Sanitize page parameter
+		$page = sanitize_key( $_GET['page'] );
+
 		// Only show on our admin pages
-		if ( strpos( $_GET['page'], 'synpat' ) !== 0 ) {
+		if ( strpos( $page, 'synpat' ) !== 0 ) {
 			return;
 		}
 
