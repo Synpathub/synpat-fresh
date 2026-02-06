@@ -213,6 +213,6 @@ class SynPat_Shortcodes {
 	 * Check if Pro Tools addon is active
 	 */
 	private function is_pro_tools_active() {
-		return defined( 'SYNPAT_PRO_TOOLS_VERSION' );
+		return defined( 'SYNPAT_PRO_VER' );
 	}
 }

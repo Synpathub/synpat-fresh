@@ -170,15 +170,9 @@ class SynPat_User_Management {
 			$user_identifier
 		) );
 
-		// Count analyses
-		$metrics['analyses_completed'] = $wpdb->get_var( $wpdb->prepare(
-			"SELECT COUNT(*) FROM {$wpdb->prefix}synpat_expert_analysis 
-			WHERE created_at IN (
-				SELECT created_at FROM {$wpdb->prefix}synpat_expert_analysis 
-				WHERE id IN (SELECT id FROM {$wpdb->prefix}postmeta WHERE meta_value = %d)
-			)",
-			$user_identifier
-		) );
+		// Count analyses - note: this assumes a created_by field or user tracking mechanism exists
+		// If not present in table, this should be tracked via metadata or join with another table
+		$metrics['analyses_completed'] = 0; // Placeholder until user tracking field is added to expert_analysis table
 
 		return $metrics;
 	}

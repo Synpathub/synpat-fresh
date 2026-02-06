@@ -22,6 +22,11 @@ class SynPat_Batch_Processor {
 	private $batch_size = 50;
 
 	/**
+	 * Delay before processing batch job (seconds)
+	 */
+	const BATCH_JOB_DELAY = 60;
+
+	/**
 	 * Initialize batch processor
 	 */
 	public function __construct( $db ) {
@@ -261,7 +266,7 @@ class SynPat_Batch_Processor {
 		);
 
 		// Schedule WP-Cron job
-		wp_schedule_single_event( time() + 60, 'synpat_pro_batch_process', [ $job_id ] );
+		wp_schedule_single_event( time() + self::BATCH_JOB_DELAY, 'synpat_pro_batch_process', [ $job_id ] );
 
 		return $job_id;
 	}

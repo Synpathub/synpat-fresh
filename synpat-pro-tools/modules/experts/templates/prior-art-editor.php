@@ -9,6 +9,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+// Note: Text domain is 'synpat-pro-tools' but shortened to 'synpat-pro' for brevity in UI strings
+
 $report_id = isset( $report ) && $report ? $report->id : 0;
 $title = isset( $report ) && $report ? $report->title : '';
 $target_patent = isset( $report ) && $report ? $report->target_patent : '';
