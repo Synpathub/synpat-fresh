@@ -1,0 +1,340 @@
+/**
+ * SynPat Pro Tools Admin Styles
+ * 
+ * @package SynPat_Pro_Tools
+ * @since 1.0.0
+ */
+
+/* Dashboard Layout */
+.synpat-pro-dashboard {
+	max-width: 1200px;
+}
+
+.synpat-pro-tools-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	gap: 20px;
+	margin: 20px 0;
+}
+
+.synpat-pro-tool-card {
+	background: white;
+	padding: 25px;
+	border: 1px solid #e5e5e5;
+	border-radius: 4px;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+	transition: box-shadow 0.2s ease;
+}
+
+.synpat-pro-tool-card:hover {
+	box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+.synpat-pro-tool-card h3 {
+	margin-top: 0;
+	color: #0073aa;
+	font-size: 18px;
+}
+
+.synpat-pro-tool-card p {
+	color: #666;
+	line-height: 1.6;
+}
+
+/* Claim Chart Builder */
+.synpat-claim-chart-builder {
+	background: white;
+	padding: 20px;
+	border: 1px solid #ddd;
+}
+
+.synpat-claim-chart-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 20px;
+	margin: 20px 0;
+}
+
+.synpat-claim-element {
+	padding: 15px;
+	border: 1px solid #e5e5e5;
+	border-radius: 4px;
+	margin-bottom: 10px;
+}
+
+.synpat-claim-element label {
+	display: block;
+	font-weight: 600;
+	margin-bottom: 8px;
+	color: #333;
+}
+
+.synpat-claim-element textarea {
+	width: 100%;
+	min-height: 100px;
+	padding: 10px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-family: monospace;
+}
+
+/* Prior Art Search */
+.synpat-prior-art-search {
+	background: white;
+	padding: 20px;
+	margin: 20px 0;
+}
+
+.synpat-search-filters {
+	display: flex;
+	gap: 15px;
+	margin-bottom: 20px;
+	flex-wrap: wrap;
+}
+
+.synpat-search-filters input,
+.synpat-search-filters select {
+	padding: 8px 12px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	min-width: 200px;
+}
+
+.synpat-prior-art-results {
+	border-top: 2px solid #0073aa;
+	padding-top: 20px;
+}
+
+.synpat-prior-art-item {
+	padding: 15px;
+	border: 1px solid #e5e5e5;
+	margin-bottom: 15px;
+	border-radius: 4px;
+	background: #fafafa;
+}
+
+.synpat-prior-art-item:hover {
+	background: #f0f0f0;
+}
+
+.synpat-prior-art-item h4 {
+	margin: 0 0 10px 0;
+	color: #0073aa;
+}
+
+.synpat-prior-art-meta {
+	font-size: 12px;
+	color: #666;
+	margin-top: 10px;
+}
+
+/* Analysis Tools */
+.synpat-analysis-dashboard {
+	background: white;
+	padding: 25px;
+}
+
+.synpat-analysis-options {
+	display: flex;
+	gap: 15px;
+	margin: 20px 0;
+	flex-wrap: wrap;
+}
+
+.synpat-analysis-option {
+	flex: 1;
+	min-width: 250px;
+	padding: 20px;
+	border: 2px solid #e5e5e5;
+	border-radius: 4px;
+	text-align: center;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.synpat-analysis-option:hover {
+	border-color: #0073aa;
+	background: #f8f9fa;
+}
+
+.synpat-analysis-option.selected {
+	border-color: #0073aa;
+	background: #e7f5ff;
+}
+
+.synpat-analysis-results {
+	margin-top: 30px;
+	padding: 20px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	background: #fafafa;
+}
+
+/* Expert Reports */
+.synpat-expert-report-editor {
+	background: white;
+	padding: 25px;
+}
+
+.synpat-report-sections {
+	margin: 20px 0;
+}
+
+.synpat-report-section {
+	margin-bottom: 25px;
+	padding-bottom: 20px;
+	border-bottom: 1px solid #e5e5e5;
+}
+
+.synpat-report-section:last-child {
+	border-bottom: none;
+}
+
+.synpat-report-section h4 {
+	margin-top: 0;
+	color: #0073aa;
+	font-size: 16px;
+}
+
+.synpat-report-section textarea,
+.synpat-report-section input[type="text"] {
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+}
+
+.synpat-report-section textarea {
+	min-height: 150px;
+	font-family: inherit;
+}
+
+/* Buttons */
+.synpat-pro-btn {
+	display: inline-block;
+	padding: 10px 20px;
+	background: #0073aa;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: 500;
+	text-decoration: none;
+	transition: background 0.2s ease;
+}
+
+.synpat-pro-btn:hover {
+	background: #005a87;
+	color: white;
+}
+
+.synpat-pro-btn-secondary {
+	background: #666;
+}
+
+.synpat-pro-btn-secondary:hover {
+	background: #444;
+}
+
+.synpat-pro-btn-danger {
+	background: #d63638;
+}
+
+.synpat-pro-btn-danger:hover {
+	background: #b32d2e;
+}
+
+/* Loading States */
+.synpat-pro-loading {
+	position: relative;
+	opacity: 0.6;
+	pointer-events: none;
+}
+
+.synpat-pro-loading::after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 40px;
+	height: 40px;
+	margin: -20px 0 0 -20px;
+	border: 4px solid #f3f3f3;
+	border-top: 4px solid #0073aa;
+	border-radius: 50%;
+	animation: synpat-spin 1s linear infinite;
+}
+
+@keyframes synpat-spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+}
+
+/* Notifications */
+.synpat-pro-notice {
+	padding: 15px 20px;
+	margin: 15px 0;
+	border-left: 4px solid #0073aa;
+	background: #e7f5ff;
+	border-radius: 4px;
+}
+
+.synpat-pro-notice-success {
+	border-left-color: #00a32a;
+	background: #e7f5e7;
+}
+
+.synpat-pro-notice-error {
+	border-left-color: #d63638;
+	background: #fce7e7;
+}
+
+.synpat-pro-notice-warning {
+	border-left-color: #dba617;
+	background: #fcf5e7;
+}
+
+/* Tables */
+.synpat-pro-table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 20px 0;
+	background: white;
+}
+
+.synpat-pro-table th,
+.synpat-pro-table td {
+	padding: 12px;
+	text-align: left;
+	border-bottom: 1px solid #e5e5e5;
+}
+
+.synpat-pro-table th {
+	background: #f8f9fa;
+	font-weight: 600;
+	color: #333;
+}
+
+.synpat-pro-table tr:hover {
+	background: #f8f9fa;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+	.synpat-pro-tools-grid {
+		grid-template-columns: 1fr;
+	}
+	
+	.synpat-claim-chart-grid {
+		grid-template-columns: 1fr;
+	}
+	
+	.synpat-search-filters {
+		flex-direction: column;
+	}
+	
+	.synpat-analysis-options {
+		flex-direction: column;
+	}
+}
