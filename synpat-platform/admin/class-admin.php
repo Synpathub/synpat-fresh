@@ -20,7 +20,9 @@ class SynPat_Admin {
 	 * Initialize admin interface
 	 */
 	public function __construct() {
-		$this->db = new SynPat_Database();
+		if ( class_exists( 'SynPat_Database' ) ) {
+			$this->db = new SynPat_Database();
+		}
 		$this->register_hooks();
 	}
 
@@ -167,12 +169,12 @@ class SynPat_Admin {
 		$portfolios_table = $this->db->table( 'portfolios' );
 		if ( ! empty( $portfolios_table ) ) {
 			$metrics['portfolio_count'] = (int) $wpdb->get_var(
-				"SELECT COUNT(*) FROM {$portfolios_table}"
+				"SELECT COUNT(*) FROM `{$portfolios_table}`"
 			);
 
 			$metrics['portfolio_active'] = (int) $wpdb->get_var(
 				$wpdb->prepare(
-					"SELECT COUNT(*) FROM {$portfolios_table} WHERE status = %s",
+					"SELECT COUNT(*) FROM `{$portfolios_table}` WHERE status = %s",
 					'active'
 				)
 			);
@@ -180,7 +182,7 @@ class SynPat_Admin {
 			// Get latest portfolios
 			$metrics['latest_portfolios'] = $wpdb->get_results(
 				"SELECT id, title, n_patents, status 
-				FROM {$portfolios_table} 
+				FROM `{$portfolios_table}` 
 				ORDER BY id DESC 
 				LIMIT 5"
 			);
@@ -190,7 +192,7 @@ class SynPat_Admin {
 		$patents_table = $this->db->table( 'patents' );
 		if ( ! empty( $patents_table ) ) {
 			$metrics['patent_count'] = (int) $wpdb->get_var(
-				"SELECT COUNT(*) FROM {$patents_table}"
+				"SELECT COUNT(*) FROM `{$patents_table}`"
 			);
 		}
 
@@ -198,7 +200,7 @@ class SynPat_Admin {
 		$wishlist_table = $this->db->table( 'wishlist' );
 		if ( ! empty( $wishlist_table ) ) {
 			$metrics['wishlist_count'] = (int) $wpdb->get_var(
-				"SELECT COUNT(*) FROM {$wishlist_table}"
+				"SELECT COUNT(*) FROM `{$wishlist_table}`"
 			);
 		}
 
@@ -234,10 +236,18 @@ class SynPat_Admin {
 	private function purge_platform_cache() {
 		// Clear WordPress transients
 		global $wpdb;
+		
+		$like_pattern = $wpdb->esc_like( '_transient_synpat_' ) . '%';
+		$like_pattern_timeout = $wpdb->esc_like( '_transient_timeout_synpat_' ) . '%';
+		
 		$wpdb->query(
-			"DELETE FROM {$wpdb->options} 
-			WHERE option_name LIKE '_transient_synpat_%' 
-			OR option_name LIKE '_transient_timeout_synpat_%'"
+			$wpdb->prepare(
+				"DELETE FROM {$wpdb->options} 
+				WHERE option_name LIKE %s 
+				OR option_name LIKE %s",
+				$like_pattern,
+				$like_pattern_timeout
+			)
 		);
 
 		// Clear object cache if available
@@ -277,7 +287,7 @@ class SynPat_Admin {
 		];
 
 		$json_output = wp_json_encode( $export_data, JSON_PRETTY_PRINT );
-		$filename = 'synpat-export-' . date( 'Y-m-d-His' ) . '.json';
+		$filename = 'synpat-export-' . gmdate( 'Y-m-d-His' ) . '.json';
 
 		header( 'Content-Type: application/json' );
 		header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
@@ -408,7 +418,7 @@ class SynPat_Admin {
 			wp_die( esc_html__( 'Insufficient permissions', 'synpat-platform' ) );
 		}
 
-		if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'synpat_backend_action' ) ) {
+		if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'synpat_backend_action' ) ) {
 			wp_die( esc_html__( 'Security check failed', 'synpat-platform' ) );
 		}
 
@@ -429,7 +439,7 @@ class SynPat_Admin {
 			wp_die( esc_html__( 'Insufficient permissions', 'synpat-platform' ) );
 		}
 
-		if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'synpat_backend_action' ) ) {
+		if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'synpat_backend_action' ) ) {
 			wp_die( esc_html__( 'Security check failed', 'synpat-platform' ) );
 		}
 
@@ -450,7 +460,7 @@ class SynPat_Admin {
 			wp_die( esc_html__( 'Insufficient permissions', 'synpat-platform' ) );
 		}
 
-		if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'synpat_backend_action' ) ) {
+		if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'synpat_backend_action' ) ) {
 			wp_die( esc_html__( 'Security check failed', 'synpat-platform' ) );
 		}
 
