@@ -186,35 +186,49 @@ class SynPat_Admin {
 	private function get_dashboard_stats() {
 		global $wpdb;
 
-		// Use table names from the database handler for safety
-		$tables = [
-			'portfolios' => $wpdb->prefix . 'synpat_portfolios',
-			'patents' => $wpdb->prefix . 'synpat_patents',
-			'licensees' => $wpdb->prefix . 'synpat_licensees',
-		];
+		// Define table names - these are safe because they use $wpdb->prefix
+		// which is controlled by WordPress configuration
+		$portfolios_table = $wpdb->prefix . 'synpat_portfolios';
+		$patents_table = $wpdb->prefix . 'synpat_patents';
+		$licensees_table = $wpdb->prefix . 'synpat_licensees';
 
-		// Get portfolio count - using esc_sql for table name
-		$portfolio_count = $wpdb->get_var(
-			"SELECT COUNT(*) FROM " . esc_sql( $tables['portfolios'] )
-		);
+		// Validate table names exist in database to prevent errors
+		$existing_tables = $wpdb->get_col( 'SHOW TABLES' );
+		
+		// Get portfolio count
+		$portfolio_count = 0;
+		if ( in_array( $portfolios_table, $existing_tables, true ) ) {
+			$portfolio_count = $wpdb->get_var(
+				"SELECT COUNT(*) FROM `{$portfolios_table}`"
+			);
+		}
 
 		// Get patent count
-		$patent_count = $wpdb->get_var(
-			"SELECT COUNT(*) FROM " . esc_sql( $tables['patents'] )
-		);
+		$patent_count = 0;
+		if ( in_array( $patents_table, $existing_tables, true ) ) {
+			$patent_count = $wpdb->get_var(
+				"SELECT COUNT(*) FROM `{$patents_table}`"
+			);
+		}
 
 		// Get licensee count
-		$licensee_count = $wpdb->get_var(
-			"SELECT COUNT(*) FROM " . esc_sql( $tables['licensees'] )
-		);
+		$licensee_count = 0;
+		if ( in_array( $licensees_table, $existing_tables, true ) ) {
+			$licensee_count = $wpdb->get_var(
+				"SELECT COUNT(*) FROM `{$licensees_table}`"
+			);
+		}
 
 		// Get recent activity (portfolios added in last 30 days)
-		$recent_portfolios = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT COUNT(*) FROM " . esc_sql( $tables['portfolios'] ) . " WHERE created_at >= %s",
-				date( 'Y-m-d H:i:s', strtotime( '-30 days' ) )
-			)
-		);
+		$recent_portfolios = 0;
+		if ( in_array( $portfolios_table, $existing_tables, true ) ) {
+			$recent_portfolios = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(*) FROM `{$portfolios_table}` WHERE created_at >= %s",
+					date( 'Y-m-d H:i:s', strtotime( '-30 days' ) )
+				)
+			);
+		}
 
 		return [
 			'portfolios' => absint( $portfolio_count ),

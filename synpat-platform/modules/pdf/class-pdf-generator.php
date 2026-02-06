@@ -211,11 +211,10 @@ class SynPat_PDF_Generator {
 		];
 
 		foreach ( $possible_paths as $path ) {
-			// Sanitize the path for shell execution
-			$safe_path = escapeshellarg( $path );
-			exec( "command -v $safe_path 2>/dev/null", $output, $return_var );
-			if ( $return_var === 0 && ! empty( $output ) ) {
-				return trim( $output[0] );
+			// Use which command to safely check if executable exists
+			$which_output = shell_exec( 'which ' . escapeshellarg( $path ) . ' 2>/dev/null' );
+			if ( ! empty( $which_output ) ) {
+				return trim( $which_output );
 			}
 		}
 
