@@ -176,7 +176,7 @@ class SynPat_Admin {
 		}
 
 		// Verify nonce for security
-		$nonce = isset( $_GET['_wpnonce'] ) ? wp_unslash( $_GET['_wpnonce'] ) : '';
+		$nonce = isset( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : '';
 		if ( ! wp_verify_nonce( $nonce, 'synpat_admin_action' ) ) {
 			return;
 		}

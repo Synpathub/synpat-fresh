@@ -52,11 +52,13 @@
 			const $builder = $('.synpat-claim-chart-builder');
 			if (!$builder.length) return;
 
-			// Add draggable functionality for claim elements
-			$('.synpat-claim-element').draggable({
-				handle: '.claim-element-handle',
-				containment: 'parent'
-			});
+			// Add draggable functionality for claim elements if jQuery UI is available
+			if ($.fn.draggable) {
+				$('.synpat-claim-element').draggable({
+					handle: '.claim-element-handle',
+					containment: 'parent'
+				});
+			}
 		},
 
 		/**
