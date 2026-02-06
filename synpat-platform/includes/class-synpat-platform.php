@@ -69,26 +69,46 @@ class SynPat_Platform {
 	 * Initialize database layer
 	 */
 	private function configure_database() {
-		$this->db_handler = new SynPat_Database();
+		if ( class_exists( 'SynPat_Database' ) ) {
+			$this->db_handler = new SynPat_Database();
+		}
 	}
 
 	/**
 	 * Activate all functional modules
 	 */
 	private function register_subsystems() {
-		$this->hook_registry = new SynPat_Hooks();
+		if ( class_exists( 'SynPat_Hooks' ) ) {
+			$this->hook_registry = new SynPat_Hooks();
+		}
 		
 		if ( is_admin() ) {
-			$this->subsystems['admin'] = new SynPat_Admin();
-			$this->subsystems['settings'] = new SynPat_Settings();
-			$this->subsystems['portfolio_cpt'] = new SynPat_Portfolio_CPT();
-			$this->subsystems['patent_cpt'] = new SynPat_Patent_CPT();
+			if ( class_exists( 'SynPat_Admin' ) ) {
+				$this->subsystems['admin'] = new SynPat_Admin();
+			}
+			if ( class_exists( 'SynPat_Settings' ) ) {
+				$this->subsystems['settings'] = new SynPat_Settings();
+			}
+			if ( class_exists( 'SynPat_Portfolio_CPT' ) ) {
+				$this->subsystems['portfolio_cpt'] = new SynPat_Portfolio_CPT();
+			}
+			if ( class_exists( 'SynPat_Patent_CPT' ) ) {
+				$this->subsystems['patent_cpt'] = new SynPat_Patent_CPT();
+			}
 		}
 
-		$this->subsystems['store_frontend'] = new SynPat_Store_Frontend();
-		$this->subsystems['shortcodes'] = new SynPat_Shortcodes();
-		$this->subsystems['ajax'] = new SynPat_Ajax_Handlers();
-		$this->subsystems['pdf_gen'] = new SynPat_PDF_Generator();
+		if ( class_exists( 'SynPat_Store_Frontend' ) ) {
+			$this->subsystems['store_frontend'] = new SynPat_Store_Frontend();
+		}
+		if ( class_exists( 'SynPat_Shortcodes' ) ) {
+			$this->subsystems['shortcodes'] = new SynPat_Shortcodes();
+		}
+		if ( class_exists( 'SynPat_Ajax_Handlers' ) ) {
+			$this->subsystems['ajax'] = new SynPat_Ajax_Handlers();
+		}
+		if ( class_exists( 'SynPat_PDF_Generator' ) ) {
+			$this->subsystems['pdf_gen'] = new SynPat_PDF_Generator();
+		}
 	}
 
 	/**
