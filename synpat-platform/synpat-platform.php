@@ -21,6 +21,7 @@ defined( 'ABSPATH' ) || exit;
 // Define plugin constants
 define( 'SYNPAT_PLATFORM_VERSION', '1.0.0' );
 define( 'SYNPAT_PLT_VER', '1.0.0' );
+define( 'SYNPAT_PLT_VERSION', '1.0.0' );
 define( 'SYNPAT_PLATFORM_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SYNPAT_PLT_ROOT', plugin_dir_path( __FILE__ ) );
 define( 'SYNPAT_PLATFORM_URL', plugin_dir_url( __FILE__ ) );
