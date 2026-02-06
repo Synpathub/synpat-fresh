@@ -12,6 +12,14 @@ defined( 'ABSPATH' ) || exit;
 class SynPat_Installer {
 
 	/**
+	 * Plugin activation handler
+	 */
+	public static function activate() {
+		self::setup_schema();
+		flush_rewrite_rules();
+	}
+
+	/**
 	 * Create database tables on plugin activation
 	 */
 	public static function setup_schema() {
