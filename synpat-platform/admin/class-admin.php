@@ -186,27 +186,32 @@ class SynPat_Admin {
 	private function get_dashboard_stats() {
 		global $wpdb;
 
-		$prefix = $wpdb->prefix;
+		// Use table names from the database handler for safety
+		$tables = [
+			'portfolios' => $wpdb->prefix . 'synpat_portfolios',
+			'patents' => $wpdb->prefix . 'synpat_patents',
+			'licensees' => $wpdb->prefix . 'synpat_licensees',
+		];
 
-		// Get portfolio count
+		// Get portfolio count - using esc_sql for table name
 		$portfolio_count = $wpdb->get_var(
-			"SELECT COUNT(*) FROM {$prefix}synpat_portfolios"
+			"SELECT COUNT(*) FROM " . esc_sql( $tables['portfolios'] )
 		);
 
 		// Get patent count
 		$patent_count = $wpdb->get_var(
-			"SELECT COUNT(*) FROM {$prefix}synpat_patents"
+			"SELECT COUNT(*) FROM " . esc_sql( $tables['patents'] )
 		);
 
 		// Get licensee count
 		$licensee_count = $wpdb->get_var(
-			"SELECT COUNT(*) FROM {$prefix}synpat_licensees"
+			"SELECT COUNT(*) FROM " . esc_sql( $tables['licensees'] )
 		);
 
 		// Get recent activity (portfolios added in last 30 days)
 		$recent_portfolios = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(*) FROM {$prefix}synpat_portfolios WHERE created_at >= %s",
+				"SELECT COUNT(*) FROM " . esc_sql( $tables['portfolios'] ) . " WHERE created_at >= %s",
 				date( 'Y-m-d H:i:s', strtotime( '-30 days' ) )
 			)
 		);

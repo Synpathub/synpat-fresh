@@ -211,7 +211,9 @@ class SynPat_PDF_Generator {
 		];
 
 		foreach ( $possible_paths as $path ) {
-			exec( "command -v $path 2>/dev/null", $output, $return_var );
+			// Sanitize the path for shell execution
+			$safe_path = escapeshellarg( $path );
+			exec( "command -v $safe_path 2>/dev/null", $output, $return_var );
 			if ( $return_var === 0 && ! empty( $output ) ) {
 				return trim( $output[0] );
 			}
@@ -228,6 +230,16 @@ class SynPat_PDF_Generator {
 	 * @return bool Success status
 	 */
 	private function generate_pdf_with_mpdf( $html, $output_path ) {
+		// Validate output path to prevent path traversal
+		$normalized_path = wp_normalize_path( $output_path );
+		$upload_dir = wp_upload_dir();
+		$allowed_base = wp_normalize_path( $upload_dir['basedir'] . '/synpat-pdfs/' );
+		
+		if ( strpos( $normalized_path, $allowed_base ) !== 0 ) {
+			error_log( 'PDF generation blocked: Invalid output path' );
+			return false;
+		}
+		
 		// This is a simplified PDF generation using PHP's built-in capabilities
 		// In production with mPDF installed, you would use:
 		// 
@@ -236,46 +248,20 @@ class SynPat_PDF_Generator {
 		// $mpdf->WriteHTML( $html );
 		// $mpdf->Output( $output_path, 'F' );
 		
-		// For now, use a basic PDF generation approach
-		// This creates a simple but functional PDF file
+		// Fallback: Save as HTML file that can be printed to PDF
+		// This is more reliable than trying to generate invalid PDF structures
 		try {
-			// Create PDF header
-			$pdf_content = "%PDF-1.4\n";
-			$pdf_content .= "1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n";
-			$pdf_content .= "2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n";
-			
-			// Convert HTML to basic text (strip tags for simple content)
-			$text_content = wp_strip_all_tags( $html );
-			$text_content = html_entity_decode( $text_content, ENT_QUOTES, 'UTF-8' );
-			
-			// Create page content stream
-			$stream = "BT\n/F1 12 Tf\n50 750 Td\n";
-			$lines = explode( "\n", wordwrap( $text_content, 80 ) );
-			foreach ( $lines as $line ) {
-				$stream .= "(" . addslashes( $line ) . ") Tj\n";
-				$stream .= "0 -15 Td\n";
-			}
-			$stream .= "ET\n";
-			
-			$pdf_content .= "3 0 obj\n<< /Type /Page /Parent 2 0 R /Resources 4 0 R /MediaBox [0 0 612 792] /Contents 5 0 R >>\nendobj\n";
-			$pdf_content .= "4 0 obj\n<< /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> >> >>\nendobj\n";
-			$pdf_content .= "5 0 obj\n<< /Length " . strlen( $stream ) . " >>\nstream\n" . $stream . "endstream\nendobj\n";
-			$pdf_content .= "xref\n0 6\n0000000000 65535 f\n";
-			
-			// Write PDF file
-			$result = file_put_contents( $output_path, $pdf_content );
+			$result = file_put_contents( $normalized_path, $this->html_to_pdf_fallback( $html ) );
 			
 			if ( $result === false ) {
-				// Fallback: Save as HTML with .pdf extension
-				// This at least preserves the content and can be opened in browsers
-				return file_put_contents( $output_path, $this->html_to_pdf_fallback( $html ) );
+				error_log( 'Failed to write PDF file: ' . $normalized_path );
+				return false;
 			}
 			
 			return true;
 		} catch ( Exception $e ) {
 			error_log( 'PDF generation error: ' . $e->getMessage() );
-			// Last resort: Save formatted HTML
-			return file_put_contents( $output_path, $this->html_to_pdf_fallback( $html ) );
+			return false;
 		}
 	}
 
